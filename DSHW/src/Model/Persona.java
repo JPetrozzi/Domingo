@@ -1,9 +1,14 @@
 package Model;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+import org.apache.tomcat.util.codec.binary.Base64;
 
 import Data.DAOFactory;
 import Utilities.DSHMensaje;
+import Utilities.StringUtil;
 
 public class Persona {
 
@@ -50,7 +55,7 @@ public class Persona {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = this.encryptPassword(password);
 	}
 
 	public String getNombre() {
@@ -98,5 +103,19 @@ public class Persona {
 	}
 	
 	// Metodos de Clase
-
+	private String encryptPassword(String pass) {
+		
+		String passEncrypted = null;
+		try {
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(pass.getBytes());
+			byte[] digest = md.digest();
+			byte[] encoded = Base64.encodeBase64(digest);
+			passEncrypted = new String(encoded);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		
+		return passEncrypted;
+	}
 }
