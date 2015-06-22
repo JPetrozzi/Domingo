@@ -29,8 +29,7 @@ public class PersonaDAO {
 				pers.setPassword(rs.getString("password"));
 				pers.setNombre(rs.getString("nombre"));
 				pers.setEmail(rs.getString("email"));
-				pers.setTelefono(rs.getString("telefono"));
-				pers.setDocumento(rs.getString("documento"));
+				pers.setApellido(rs.getString("apellido"));
 			}
 		} 
 		catch (SQLException e) 
@@ -97,15 +96,14 @@ public class PersonaDAO {
 	public void create(Persona p) {
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
-		String queryString = "INSERT INTO personas (user,password,nombre,email,telefono,documento) VALUES (?,?,?,?,?,?)";
+		String queryString = "INSERT INTO personas (user,password,nombre,apellido,email) VALUES (?,?,?,?,?)";
 		try  {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, p.getUser());
 			ps.setString(2, p.getPassword());
 			ps.setString(3, p.getNombre());
-			ps.setString(4, p.getEmail());
-			ps.setString(5, p.getTelefono());
-			ps.setString(6, p.getDocumento());
+			ps.setString(4, p.getApellido());
+			ps.setString(5, p.getEmail());
 			ps.executeUpdate();
 		} 
 		catch (SQLException e) {

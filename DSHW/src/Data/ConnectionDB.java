@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 
 public class ConnectionDB {
 	
-	String DB = "test";
+	String DB = "prodedb";
 	String userDB = "root";
 	String passDB = "petrozzi";
 	String driver = "com.mysql.jdbc.Driver";

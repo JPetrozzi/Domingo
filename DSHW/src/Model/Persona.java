@@ -1,45 +1,19 @@
 package Model;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-
-import org.apache.tomcat.util.codec.binary.Base64;
-
 import Data.DAOFactory;
 import Utilities.DSHMensaje;
 import Utilities.StringUtil;
 
-public class Persona {
+public class Persona extends BaseBO {
 
-	private Long 	id;
-	private DSHMensaje mensaje;
 	private String	user;
 	private String 	password;
 	private String 	nombre;
-	private String 	email;
-	private String	telefono;
-	private String 	documento;
+	private String 	apellido;
+	private String	email;
 	
 	public Persona(){
-		
-	}
-
-	// Getters and Setters
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	public DSHMensaje getMensaje() {
-		return mensaje;
-	}
-
-	public void setMensaje(DSHMensaje mensaje) {
-		this.mensaje = mensaje;
+		super();
 	}
 
 	public String getUser() {
@@ -55,7 +29,7 @@ public class Persona {
 	}
 
 	public void setPassword(String password) {
-		this.password = this.encryptPassword(password);
+		this.password = StringUtil.encryptText(password);
 	}
 
 	public String getNombre() {
@@ -74,20 +48,12 @@ public class Persona {
 		this.email = email;
 	}
 
-	public String getTelefono() {
-		return telefono;
+	public String getApellido() {
+		return apellido;
 	}
 
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-
-	public String getDocumento() {
-		return documento;
-	}
-
-	public void setDocumento(String documento) {
-		this.documento = documento;
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
 	}
 	
 	//	Metodos para ABM
@@ -100,22 +66,5 @@ public class Persona {
 			this.setMensaje(new DSHMensaje("mensajeError", "El usuario ingresado ya se encuentra en uso."));
 		}
 		return this;
-	}
-	
-	// Metodos de Clase
-	private String encryptPassword(String pass) {
-		
-		String passEncrypted = null;
-		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			md.update(pass.getBytes());
-			byte[] digest = md.digest();
-			byte[] encoded = Base64.encodeBase64(digest);
-			passEncrypted = new String(encoded);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		
-		return passEncrypted;
 	}
 }

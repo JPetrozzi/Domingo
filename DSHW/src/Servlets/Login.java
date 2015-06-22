@@ -9,43 +9,42 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Data.DAOFactory;
 import Model.Persona;
-import Utilities.DSHMensaje;
+import Utilities.StringUtil;
 
 /**
- * Servlet implementation class RegistroPersona
+ * Servlet implementation class Login
  */
-@WebServlet("/RegistroPersona")
-public class RegistroPersona extends HttpServlet {
+@WebServlet("/Login")
+public class Login extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	public HttpSession session;
 
-    public RegistroPersona() {
+    public Login() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		this.doPost(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		Persona p = new Persona();
-		p.setMensaje(new DSHMensaje());
-		p.setUser(request.getParameter("user").trim());
-		p.setPassword(request.getParameter("password").trim());
-		p.setNombre(request.getParameter("nombre").trim());
-		p.setApellido(request.getParameter("apellido").trim());
-		p.setEmail(request.getParameter("email").trim());
-		p = p.create();
+		
+		String user = request.getParameter("user");
+		String pass = StringUtil.encryptText(request.getParameter("pass"));
+		
+		Persona p = DAOFactory.getPersonaDAO().validarLogin(user, pass);
 		
 		session = request.getSession(true);
-		session.setAttribute(p.getMensaje().getKey(), p.getMensaje().getMessage());
-		if (p.getMensaje().getKey().equals("mensajeOK"))
+		
+		if (p != null) {
+			response.sendRedirect("test.jsp");
+		} else {
+			session.setAttribute("mensajeError", "El usuario o la contraseña ingresada son incorrectos.");
 			response.sendRedirect("index.jsp");
-		else 
-			response.sendRedirect("nuevaCuenta.jsp");
+		}
 	}
+
 }
