@@ -2,6 +2,9 @@ package Model;
 
 import java.util.Date;
 
+import Data.DAOFactory;
+import Utilities.DSHMensaje;
+
 public class Partido extends BaseBO {
 
 	private Equipo local;
@@ -61,5 +64,36 @@ public class Partido extends BaseBO {
 
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+	
+	//	Metodos para ABM
+	public Partido create() {
+		
+		int result = DAOFactory.getPartidoDAO().create(this);
+		if (result > 0)
+			this.setMensaje(new DSHMensaje("mensajeOK", "¡Partido creado correctamente!"));
+		else 
+			this.setMensaje(new DSHMensaje("mensajeError", "Ocurrio un error al crear el partido."));
+		return this;
+	}
+	
+	public Partido delete() {
+		
+		int result = DAOFactory.getPartidoDAO().delete(this);
+		if (result > 0)
+			this.setMensaje(new DSHMensaje("mensajeOK", "¡Partido eliminado correctamente!"));
+		else 
+			this.setMensaje(new DSHMensaje("mensajeError", "Ocurrio un error al eliminar el partido."));
+		return this;
+	}
+	
+	public Partido update() {
+		
+		int result = DAOFactory.getPartidoDAO().update(this);
+		if (result > 0)
+			this.setMensaje(new DSHMensaje("mensajeOK", "¡Partido modificado correctamente!"));
+		else 
+			this.setMensaje(new DSHMensaje("mensajeError", "Ocurrio un error al modificar el partido."));
+		return this;
 	}
 }

@@ -15,14 +15,12 @@ public class PersonaDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String queryString = "SELECT * FROM personas WHERE user = ? AND password = ?;";
-		try 
-		{
+		try {	
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, user);
 			ps.setString(2, pass);
 			rs = ps.executeQuery();
-			if(rs.next())
-			{
+			if(rs.next()) {
 				pers = new Persona();
 				pers.setId(rs.getLong("idpersona"));
 				pers.setUser(rs.getString("user"));
@@ -30,22 +28,19 @@ public class PersonaDAO {
 				pers.setNombre(rs.getString("nombre"));
 				pers.setEmail(rs.getString("email"));
 				pers.setApellido(rs.getString("apellido"));
+				pers.setEsAdmin(rs.getInt("esadmin"));
 			}
 		} 
-		catch (SQLException e) 
-		{
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		finally
-		{
-			try 
-			{
+		finally {
+			try {
 				con.getConnection().close();
 				ps.close();
 				rs.close();
 			} 
-			catch (SQLException e) 
-			{
+			catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
@@ -59,44 +54,39 @@ public class PersonaDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		String queryString = "SELECT * FROM personas WHERE user = ?;";
-		try 
-		{
+ 		try {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, user);
 			rs = ps.executeQuery();
-			if(rs.next())
-			{
+			if(rs.next()) {
 				isValid = false;
 			}
-			else
-			{
+			else {
 				isValid = true;
 			}
 		} 
-		catch (SQLException e) 
-		{
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		finally
-		{
-			try 
-			{
+   		finally {
+			try {
 				con.getConnection().close();
 				ps.close();
 				rs.close();
 			} 
-			catch (SQLException e) 
-			{
+			catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
 		return isValid;
 	}
 	
-	public void create(Persona p) {
+	public int create(Persona p) {
+		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
-		String queryString = "INSERT INTO personas (user,password,nombre,apellido,email) VALUES (?,?,?,?,?)";
+		String queryString = "INSERT INTO personas (user,password,nombre,apellido,email,esadmin) VALUES (?,?,?,?,?,?)";
 		try  {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, p.getUser());
@@ -104,7 +94,8 @@ public class PersonaDAO {
 			ps.setString(3, p.getNombre());
 			ps.setString(4, p.getApellido());
 			ps.setString(5, p.getEmail());
-			ps.executeUpdate();
+			ps.setInt(6, p.getEsAdmin());
+			result = ps.executeUpdate();
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -118,7 +109,67 @@ public class PersonaDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
+	
+	public int delete(Persona p) {
+		
+		int result = 0;
+		ConnectionDB con = new ConnectionDB();
+		PreparedStatement ps = null;
+		String queryString = "DELETE FROM personas WHERE idpersona = ?;";
+		try {
+			ps = con.getConnection().prepareStatement(queryString);
+			ps.setLong(1, p.getId());
+			result = ps.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				con.getConnection().close();
+				ps.close();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	public int update(Persona p) {
+		
+		int result = 0;
+		ConnectionDB con = new ConnectionDB();
+		PreparedStatement ps = null;
+		String queryString = "UPDATE personas SET user = ?, password = ?, nombre = ?, apellido = ?, email = ?, esadmin = ? WHERE idpersona = ?;";
+		try {
+			ps = con.getConnection().prepareStatement(queryString);
+			ps.setString(1, p.getUser());
+			ps.setString(2, p.getPassword());
+			ps.setString(3, p.getNombre());
+			ps.setString(4, p.getApellido());
+			ps.setString(5, p.getEmail());
+			ps.setInt(6, p.getEsAdmin());
+			ps.setLong(7, p.getId());
+			result = ps.executeUpdate();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				con.getConnection().close();
+				ps.close();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
 	
 //	public ArrayList<Usuario> getAll()
 //	{
@@ -205,68 +256,5 @@ public class PersonaDAO {
 //			}
 //		}
 //		return u;
-//	}
-//	
-//	public void eliminarUsuario(int id)
-//	{
-//		ConeccionDB con = new ConeccionDB();
-//		PreparedStatement ps = null;
-//		String queryString = "DELETE FROM usuarios WHERE id_usuario = ?;";
-//		try
-//		{
-//			ps = con.getConnection().prepareStatement(queryString);
-//			ps.setInt(1, id);
-//			ps.execute();
-//		}
-//		catch(SQLException e)
-//		{
-//			e.printStackTrace();
-//		}
-//		finally
-//		{
-//			try
-//			{
-//				con.getConnection().close();
-//				ps.close();
-//			}
-//			catch(SQLException e)
-//			{
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-//	
-//	public void editarUsuario(Usuario u)
-//	{
-//		ConeccionDB con = new ConeccionDB();
-//		PreparedStatement ps = null;
-//		String queryString = "UPDATE usuarios SET username = ?, password = ?, tipo_usuario = ?, nombre = ?, email = ? WHERE id_usuario = ?;";
-//		try
-//		{
-//			ps = con.getConnection().prepareStatement(queryString);
-//			ps.setString(1, u.getUsername());
-//			ps.setString(2, u.getPassword());
-//			ps.setString(3, u.getRol());
-//			ps.setString(4, u.getNombre());
-//			ps.setString(5, u.getEmail());
-//			ps.setInt(6, u.getId());
-//			ps.execute();
-//		}
-//		catch(SQLException e)
-//		{
-//			e.printStackTrace();
-//		}
-//		finally
-//		{
-//			try
-//			{
-//				con.getConnection().close();
-//				ps.close();
-//			}
-//			catch(SQLException e)
-//			{
-//				e.printStackTrace();
-//			}
-//		}
 //	}
 }

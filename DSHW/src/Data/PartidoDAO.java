@@ -8,7 +8,9 @@ import Model.Partido;
 
 public class PartidoDAO {
 
-	public void create(Partido p) {
+	public int create(Partido p) {
+		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "INSERT INTO partidos (idlocal,idvisitante,goleslocal,golesvisitante,idfechatorneo,fecha) VALUES (?,?,?,?,?,?)";
@@ -20,7 +22,7 @@ public class PartidoDAO {
 			ps.setInt(4, p.getGolesVisitante());
 			ps.setLong(5, p.getFechaTorneo().getId());
 			ps.setDate(6, (Date)p.getFecha());
-			ps.executeUpdate();
+			result = ps.executeUpdate();
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -34,17 +36,19 @@ public class PartidoDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
-	public void delete(Partido p) {
+	public int delete(Partido p) {
 		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "DELETE FROM partidos WHERE idpartido = ?;";
 		try {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setLong(1, p.getId());
-			ps.execute();
+			result = ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -58,10 +62,12 @@ public class PartidoDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
-	public void update(Partido p) {
+	public int update(Partido p) {
 		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "UPDATE partidos SET idlocal = ?, idvisitante = ?, goleslocal = ?, golesvisitante = ?, idfechatorneo = ?, fecha = ? WHERE idpartido = ?;";
@@ -74,7 +80,7 @@ public class PartidoDAO {
 			ps.setLong(5, p.getFechaTorneo().getId());
 			ps.setDate(6, (Date)p.getFecha());
 			ps.setLong(7, p.getId());
-			ps.execute();
+			result = ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -88,5 +94,6 @@ public class PartidoDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 }

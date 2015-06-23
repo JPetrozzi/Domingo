@@ -7,7 +7,9 @@ import Model.Fecha;
 
 public class FechaDAO {
 
-	public void create(Fecha f) {
+	public int create(Fecha f) {
+		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "INSERT INTO fechas (descripcion,idtorneo) VALUES (?,?)";
@@ -15,7 +17,7 @@ public class FechaDAO {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, f.getDescripcion());
 			ps.setLong(2, f.getTorneo().getId());
-			ps.executeUpdate();
+			result = ps.executeUpdate();
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -29,17 +31,19 @@ public class FechaDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
-	public void delete(Fecha f) {
+	public int delete(Fecha f) {
 		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "DELETE FROM fechas WHERE idfecha = ?;";
 		try {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setLong(1, f.getId());
-			ps.execute();
+			result = ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -53,10 +57,12 @@ public class FechaDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
-	public void update(Fecha f) {
+	public int update(Fecha f) {
 		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "UPDATE fechas SET descripcion = ?, idtorneo = ? WHERE idfecha = ?;";
@@ -65,7 +71,7 @@ public class FechaDAO {
 			ps.setString(1, f.getDescripcion());
 			ps.setLong(2, f.getTorneo().getId());
 			ps.setLong(3, f.getId());
-			ps.execute();
+			result = ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -79,5 +85,6 @@ public class FechaDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 }

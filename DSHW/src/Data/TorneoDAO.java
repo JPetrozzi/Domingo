@@ -7,14 +7,16 @@ import Model.Torneo;
 
 public class TorneoDAO {
 
-	public void create(Torneo t) {
+	public int create(Torneo t) {
+		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "INSERT INTO torneos (descripcion) VALUES (?)";
 		try  {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, t.getDescripcion());
-			ps.executeUpdate();
+			result = ps.executeUpdate();
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -28,17 +30,19 @@ public class TorneoDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
-	public void delete(Torneo t) {
+	public int delete(Torneo t) {
 		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "DELETE FROM torneos WHERE idtorneo = ?;";
 		try {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setLong(1, t.getId());
-			ps.execute();
+			result = ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -52,10 +56,12 @@ public class TorneoDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 	
-	public void update(Torneo t) {
+	public int update(Torneo t) {
 		
+		int result = 0;
 		ConnectionDB con = new ConnectionDB();
 		PreparedStatement ps = null;
 		String queryString = "UPDATE torneos SET descripcion = ? WHERE idtorneo = ?;";
@@ -63,7 +69,7 @@ public class TorneoDAO {
 			ps = con.getConnection().prepareStatement(queryString);
 			ps.setString(1, t.getDescripcion());
 			ps.setLong(2, t.getId());
-			ps.execute();
+			result = ps.executeUpdate();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -77,5 +83,6 @@ public class TorneoDAO {
 				e.printStackTrace();
 			}
 		}
+		return result;
 	}
 }

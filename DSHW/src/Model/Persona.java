@@ -11,7 +11,9 @@ public class Persona extends BaseBO {
 	private String 	nombre;
 	private String 	apellido;
 	private String	email;
+	private Integer esAdmin;  // 0 ---> FALSE   -   1 ---> TRUE
 	
+
 	public Persona(){
 		super();
 	}
@@ -56,15 +58,46 @@ public class Persona extends BaseBO {
 		this.apellido = apellido;
 	}
 	
+	public Integer getEsAdmin() {
+		return esAdmin;
+	}
+
+	public void setEsAdmin(Integer esAdmin) {
+		this.esAdmin = esAdmin;
+	}
+	
 	//	Metodos para ABM
 	public Persona create() {
 		
 		if (DAOFactory.getPersonaDAO().isUserValid(user)) {
-			DAOFactory.getPersonaDAO().create(this);
-			this.setMensaje(new DSHMensaje("mensajeOK", "¡Usuario registrado correctamente!"));
+			int result = DAOFactory.getPersonaDAO().create(this);
+			if (result > 0)
+				this.setMensaje(new DSHMensaje("mensajeOK", "¡Usuario registrado correctamente!"));
+			else 
+				this.setMensaje(new DSHMensaje("mensajeError", "Ocurrio un error al crear la cuenta."));
 		} else {
 			this.setMensaje(new DSHMensaje("mensajeError", "El usuario ingresado ya se encuentra en uso."));
 		}
+		return this;
+	}
+	
+	public Persona delete() {
+		
+		int result = DAOFactory.getPersonaDAO().delete(this);
+		if (result > 0)
+			this.setMensaje(new DSHMensaje("mensajeOK", "¡Usuario eliminado correctamente!"));
+		else 
+			this.setMensaje(new DSHMensaje("mensajeError", "Ocurrio un error al eliminar la cuenta."));
+		return this;
+	}
+	
+	public Persona update() {
+		
+		int result = DAOFactory.getPersonaDAO().update(this);
+		if (result > 0)
+			this.setMensaje(new DSHMensaje("mensajeOK", "¡Usuario modificado correctamente!"));
+		else 
+			this.setMensaje(new DSHMensaje("mensajeError", "Ocurrio un error al modificar la cuenta."));
 		return this;
 	}
 }
